@@ -46,10 +46,14 @@ async def main_menu(message):
 
 @dp.message_handler(text=['Купить'])
 async def get_buying_list(message):
-    products = get_all_products()
+    #products = get_all_products()
     for product in products:
-        with open(f'pics/pic{product[0]}.jpg', 'rb') as image:
-            await message.answer_photo(image, f'Название: {product[1]} | Описание: {product[2]} | Цена: {product[3]}')
+        try:
+            with open(f'pics/pic{product[0]}.jpg', 'rb') as image:
+                await message.answer_photo(image, f'Название: {product[1]} | Описание: {product[2]} | Цена: {product[3]}')
+        except FileNotFoundError:
+                await message.answer(f'Название: {product[1]} | Описание: {product[2]} | Цена: {product[3]}')
+
     await message.answer('Выберите продукт для покупки:', reply_markup=products_kb)
 
 @dp.callback_query_handler(text='product_buying')
